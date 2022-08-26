@@ -1,0 +1,335 @@
+openapi: 3.0.0
+info:
+  title: XS-Onboarding Document-Manage Service
+  description: This api is used for uploading to cloud and accessing those uploaded documents 
+  version: 1.0.0
+servers: 
+  - url : http://localhost:8000
+    description : This url is used for testing api's locally
+  - url : https://xs-onboarding.xenon.work/api/docs-manage
+    description : This url is used to test api of develop
+  - url : https://xs-onboarding.xenon.team/api/docs-manage
+    description: This url is used to test api of production
+components:
+  securitySchemes:
+    bearer:            
+      type: http
+      scheme: bearer
+      bearerFormat: JWT  
+paths:
+  /user/upload:
+    post:
+      summary: Uploads a file.
+      requestBody:
+        content: 
+          multipart/form-data:
+            schema:           
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: "profile"
+                files:  
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      responses:
+        '200':
+          description: A JSON array of response
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: "successful"
+                  uploadlink:
+                    type: array
+                    items:
+                      type: string
+                  preview_links:
+                    type: string
+                    format: string
+                    example: "presigned url link for viewing file"
+                  unsuccessful_uploads:
+                    type: string
+                    format: string
+                    example: "name of the files that could not be uploaded"
+        '400' :
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: "Invalid token"
+        '500' :
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: "internal server error"
+  /uploadpolicy:
+    post:
+      summary: Upload policy.
+      requestBody:
+        content: 
+          multipart/form-data:
+            schema:            # Request payload
+              type: object
+              properties:
+                uploadfile:  # Part 3 (an image)
+                  type: string
+                  format: binary
+
+      security:
+        - bearer: []
+      x-codegen-request-body-name: accounts
+      responses:
+        '200':
+          description: A JSON array of response
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: "file uploaded successfully"
+                  link:
+                    type: string
+                    format: string
+                    example: "uploaded file link"
+        '400' :
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: "Invalid token"
+        '500' :
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: "internal server error"
+  /getfile/{filename}:
+    get:
+      summary: used to get uploaded file
+      security:
+        - bearer: []
+      x-codegen-request-body-name: document-manage
+      parameters:
+        - in: path
+          name: filename   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: filename of file
+      responses:
+        '200':
+          description: A JSON array of response
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: "operation successful"
+        '400' :
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: "Invalid token"
+        '500' :
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: "internal server error"
+  /delete/{filename}:
+    delete:
+      summary: used to delete file
+      security:
+        - bearer: []
+      x-codegen-request-body-name: document-manage
+      parameters:
+        - in: path
+          name: filename   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: string
+            minimum: 1
+          description: filename of file
+      responses:
+        '200':
+          description: A JSON array of response
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: "file deleted successfuly"
+        '400' :
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: "Invalid token"
+        '500' :
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: "internal server error"
+  /getpolicy:
+    get:
+      summary: used to get uploaded policy link
+      security:
+        - bearer: []
+      x-codegen-request-body-name: document-manage
+      responses:
+        '200':
+          description: A JSON array of response
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: false
+                  message:
+                    type: string
+                    format: string
+                    example: "operation successful"
+        '400' :
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: "Invalid token"
+        '500' :
+          description: A JSON array of response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    format: bool
+                    example: true
+                  message:
+                    type: string
+                    format: string
+                    example: "internal server error"

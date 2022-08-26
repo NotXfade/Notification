@@ -1,0 +1,22 @@
+[Service]
+  Port = "8001"
+  Environment = "development"
+  Build=""
+[Database]
+  name = "xsonboarding_docs_manage"
+  host = "localhost"
+  port = "5432"
+  user = "postgres"
+  pass = "postgres"
+  ideal = "50"
+[AWS]
+  AccessID=""
+  AccessKey=""
+  BucketName=""
+[JWT]
+  PrivateKey = "same among all the services"
+[NatsServer]
+  url = "localhost:4222"
+  username = ""
+  password = ""
+  token = ""
